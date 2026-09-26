@@ -1,0 +1,13 @@
+# Core (analysis and perturbation checks run without a GPU)
+numpy>=1.24
+matplotlib>=3.7
+
+# Generation (GPU; preinstalled on Google Colab except bitsandbytes)
+torch>=2.1
+transformers>=4.45
+accelerate>=0.33
+bitsandbytes>=0.43
+datasets>=2.18
+
+# Tests
+pytest>=7.4

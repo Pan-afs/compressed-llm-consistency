@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Raw generations are large; the summary tables and chart are versioned.
+results/raw/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
