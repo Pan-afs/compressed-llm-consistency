@@ -13,8 +13,9 @@ import gc
 import json
 import platform
 import time
+from importlib import metadata
 from pathlib import Path
-from typing import List, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 from codecons.data import Problem, load_humaneval
 from codecons.execution import build_program, run_many
@@ -107,9 +108,7 @@ def _completed(path: Path, model_id: str) -> Set[Tuple[str, str]]:
 
 
 def _write_meta(path: Path, args, precision: str, footprint: int, seconds: float) -> None:
-    import bitsandbytes
     import torch
-    import transformers
 
     meta = {
         "model": args.model,
@@ -121,12 +120,17 @@ def _write_meta(path: Path, args, precision: str, footprint: int, seconds: float
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
         "versions": {
             "python": platform.python_version(),
-            "torch": torch.__version__,
-            "transformers": transformers.__version__,
-            "bitsandbytes": bitsandbytes.__version__,
+            **{pkg: _version(pkg) for pkg in ("torch", "transformers", "accelerate", "bitsandbytes")},
         },
     }
     path.write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+
+
+def _version(package: str) -> Optional[str]:
+    try:
+        return metadata.version(package)
+    except metadata.PackageNotFoundError:
+        return None
 
 
 if __name__ == "__main__":
