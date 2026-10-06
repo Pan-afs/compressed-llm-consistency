@@ -92,12 +92,12 @@ def build_summary(outcomes: metrics.Outcomes, precisions: List[str], meta: Dict[
 
 def render_tables(summary: dict, precisions: List[str]) -> str:
     P = summary["precisions"]
+    n_by_variant = {v: P[precisions[0]]["pass_at_1"][v]["n"] for v in VARIANTS}
     lines = []
     if summary.get("model"):
-        lines += [f"Model: `{summary['model']}`, greedy decoding, HumanEval (164 problems).", ""]
+        lines += [f"Model: `{summary['model']}`, greedy decoding, HumanEval ({n_by_variant['original']} problems).", ""]
 
     lines += ["**pass@1 (%)** per prompt variant", ""]
-    n_by_variant = {v: P[precisions[0]]["pass_at_1"][v]["n"] for v in VARIANTS}
     header = ["Precision", "Memory (MiB)"] + [f"{v} (n={n_by_variant[v]})" for v in VARIANTS]
     lines += _table_header(header)
     for prec in precisions:
